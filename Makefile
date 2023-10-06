@@ -9,4 +9,4 @@ install: tval
 	rm -f tval
 
 clean:
-	rm -f tval
+	rm -f tval 
