@@ -8,6 +8,7 @@
 #define PRECISION 12
 #define PI "3.141592653589793238462643383279502884197"
 #define E "2.7182818284590452353602874713526624977572"
+#define GR "1.61803398874989484820458683436563811"
 
 #define MAX_INPUT 9999
 
@@ -257,6 +258,8 @@ long double evaluate(Stack *tokens) {
       push(s, PI);
     } else if (streq(t, "e")) {
       push(s, E);
+    } else if (streq(t, "gr")) {
+      push(s, GR);
     } else {
       push(s, t);
     }
