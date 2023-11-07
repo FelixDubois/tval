@@ -58,11 +58,9 @@ tval "exp(2)"
 
 ## Todos
 ### Bugs
-- Some math expression are not evaluated properly like `2/3*4` is `(2/3)*4` but is currently calculated as `2/(3*4)`.
 - Expression like `tan(pi/2)` should return `inf` and not the maximum value for a `long double`.
 
 ### What I want to work on ?
 - Add `-p` parrameter to be able to set the precision of the result.
 - Include more functions and constants.
-- Find a better way to evaluate expression than the SYA algorithm.
 - Add complex numbers
