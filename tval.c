@@ -178,7 +178,6 @@ long double evaluate_sya(Stack * out_r) {
         }
 
         long double a = strtold(pop(s), NULL);
-        //long double fresult = 0.0;
 
         if(streq(f, "log")) {
           result = logl(a);
@@ -196,7 +195,6 @@ long double evaluate_sya(Stack * out_r) {
           result = tanl(a);
         }else if(streq(f, "sin")) {
           result = sinl(a);
-          printf("Result : %Lf\n", result);
         }else if(streq(f, "cos")) {
           result = cosl(a);
         }else if(streq(f, "sqrt")) {
