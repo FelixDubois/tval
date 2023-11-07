@@ -5,7 +5,7 @@
 #include <stdio.h>
 #include <string.h>
 
-#define PRECISION 12
+#define DEFAULT_PRECISION 12
 #define PI "3.141592653589793238462643383279502884197"
 #define E "2.7182818284590452353602874713526624977572"
 #define GR "1.61803398874989484820458683436563811"
@@ -131,7 +131,7 @@ Stack *SYA(Tokens tokens) {
   return out;
 }
 
-long double evaluate_sya(Stack * out_r) {
+long double evaluate_sya(Stack * out_r, int precision) {
     long double result = 0.0;
     Stack *s = create_stack(out_r->size);
     while (out_r->top >= 0) {
@@ -168,7 +168,7 @@ long double evaluate_sya(Stack * out_r) {
           exit(1);
         }
         char buff[MAX_PRECISION];
-        snprintf(buff, sizeof(buff), "%.*Lf", PRECISION + 1, result);
+        snprintf(buff, sizeof(buff), "%.*Lf", precision + 1, result);
         push(s, buff);
       }else if(is_function(head(out_r))) {
         char *f = pop(out_r);
@@ -205,7 +205,7 @@ long double evaluate_sya(Stack * out_r) {
         }
         
         char buff[MAX_PRECISION];
-        snprintf(buff, sizeof(buff), "%.*Lf", PRECISION + 1, result);
+        snprintf(buff, sizeof(buff), "%.*Lf", precision + 1, result);
         push(s, buff);
       }
 
@@ -214,12 +214,12 @@ long double evaluate_sya(Stack * out_r) {
     return result;
 }
 
-long double calculate(char *cmd) {
+long double calculate(char *cmd, int precision) {
     Tokens tokens = tokenize(cmd);
 
     Stack *s = reverse(SYA(tokens));
 
-    return evaluate_sya(s);
+    return evaluate_sya(s, precision);
   }
 
 int main(int argc, char **argv) {
@@ -228,9 +228,18 @@ int main(int argc, char **argv) {
     exit(1);
   }
 
-  char *cmd = argv[1];
+  int precision = DEFAULT_PRECISION;
+  for(int c = 0; c < argc; c++){
+    if(streq(argv[c], "-p")){
+      assert(argc > c + 1);
+      
+      precision = atoi(argv[c + 1]);
+    }
+  }
 
-  long double result = calculate(cmd);
+  char *cmd = argv[argc - 1];
 
-  printf("%.*Lf\n", PRECISION, result);
+  long double result = calculate(cmd, precision);
+
+  printf("%.*Lf\n", precision, result);
 }
