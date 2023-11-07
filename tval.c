@@ -220,17 +220,8 @@ long double calculate(char *cmd) {
     Tokens tokens = tokenize(cmd);
 
     Stack *s = reverse(SYA(tokens));
-    //print(s);
 
     return evaluate_sya(s);
-    /*Stack *s = create_stack(tokens.count);
-
-    for (int i = 0; i < tokens.count; i++) {
-      push(s, tokens.tokens[i].value);
-    }
-
-    Stack *s_r = reverse(s);
-    return evaluate(s_r);*/
   }
 
 int main(int argc, char **argv) {
