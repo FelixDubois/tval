@@ -21,7 +21,7 @@ Stack *create_stack(int size) {
   return s;
 }
 
-char *head(Stack *s) { return s->data[s->top]; }
+char *head(Stack *s) {   if (s->top < 0) { return NULL; } return s->data[s->top]; }
 
 char *pop(Stack *s) {
   assert(s->top >= 0 && "UNDERFLOW !\n");
