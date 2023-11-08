@@ -222,18 +222,34 @@ long double calculate(char *cmd, int precision) {
     return evaluate_sya(s, precision);
   }
 
+void print_help(){
+  printf("Help for tval\n");
+  printf("Usage : tval [OPTIONS] \"EXPRESSION\"\n");
+  printf("Options :\n");
+  printf("\t-h, --help : Print this help\n");
+  printf("\t-p PRECISION : Set the precision of the result (default : %d)\n", DEFAULT_PRECISION);
+}
+
 int main(int argc, char **argv) {
   if (argc < 2) {
-    fprintf(stderr, "%s", "Wrong usage : tval \"5 * exp(2) + pi\"\n");
+    printf("Error : Wrong usage of tval\nType --help to have more info\n");
     exit(1);
   }
 
   int precision = DEFAULT_PRECISION;
   for(int c = 0; c < argc; c++){
-    if(streq(argv[c], "-p")){
+    if(streq(argv[c], "-h") || streq(argv[c], "--help")){
+      print_help();
+      return 0;
+    }
+    else if(streq(argv[c], "-p")){
       assert(argc > c + 1);
       
       precision = atoi(argv[c + 1]);
+    }
+    else if(c > 0 && c != argc - 1){
+      printf("Error : Wrong usage of parameters\nType --help to have more info\n");
+      exit(1);
     }
   }
 

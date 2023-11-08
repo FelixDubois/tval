@@ -61,6 +61,5 @@ tval "exp(2)"
 - Expression like `tan(pi/2)` should return `inf` and not the maximum value for a `long double`.
 
 ### What I want to work on ?
-- Add `-p` parrameter to be able to set the precision of the result.
 - Include more functions and constants.
 - Add complex numbers
