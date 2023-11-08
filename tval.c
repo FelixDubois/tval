@@ -6,9 +6,9 @@
 #include <string.h>
 
 #define DEFAULT_PRECISION 12
-#define PI "3.141592653589793238462643383279502884197"
-#define E "2.7182818284590452353602874713526624977572"
-#define GR "1.61803398874989484820458683436563811"
+#define PI  "3.141592653589793238462643383279502884197"
+#define E   "2.7182818284590452353602874713526624977572"
+#define GR  "1.61803398874989484820458683436563811"
 
 #define MAX_PRECISION 9999
 
@@ -228,6 +228,7 @@ void print_help(){
   printf("Options :\n");
   printf("\t-h, --help : Print this help\n");
   printf("\t-p PRECISION : Set the precision of the result (default : %d)\n", DEFAULT_PRECISION);
+  printf("\t-s : Print the result in the scientific format\n");
 }
 
 int main(int argc, char **argv) {
@@ -237,6 +238,7 @@ int main(int argc, char **argv) {
   }
 
   int precision = DEFAULT_PRECISION;
+  bool scientific_notation = false;
   for(int c = 0; c < argc; c++){
     if(streq(argv[c], "-h") || streq(argv[c], "--help")){
       print_help();
@@ -246,6 +248,11 @@ int main(int argc, char **argv) {
       assert(argc > c + 1);
       
       precision = atoi(argv[c + 1]);
+      if(precision > MAX_PRECISION) precision = MAX_PRECISION;
+      c++;
+    }
+    else if(streq(argv[c], "-s")){
+      scientific_notation = true;
     }
     else if(c > 0 && c != argc - 1){
       printf("Error : Wrong usage of parameters\nType --help to have more info\n");
@@ -257,5 +264,8 @@ int main(int argc, char **argv) {
 
   long double result = calculate(cmd, precision);
 
-  printf("%.*Lf\n", precision, result);
+  if(scientific_notation){ printf("%.*Le\n", precision, result); }
+  else{ printf("%.*Lf\n", precision, result); }
+
+  return 0;
 }

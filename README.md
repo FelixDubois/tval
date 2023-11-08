@@ -26,7 +26,7 @@ It will install `tval` in your `/usr/local/bin` folder.
 ## How to use ?
 To use `tval` it's easy !
 ```shell
-tval "YOUR MATH EXPRESSION"
+tval [OPTIONS] "EXPRESSION"
 ```
 
 ## Example
