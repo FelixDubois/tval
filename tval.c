@@ -220,7 +220,7 @@ long double calculate(char *cmd, int precision) {
     Stack *s = reverse(SYA(tokens));
 
     return evaluate_sya(s, precision);
-  }
+}
 
 void print_help(){
   printf("Help for tval\n");
@@ -238,6 +238,7 @@ int main(int argc, char **argv) {
   }
 
   int precision = DEFAULT_PRECISION;
+
   bool scientific_notation = false;
   for(int c = 0; c < argc; c++){
     if(streq(argv[c], "-h") || streq(argv[c], "--help")){
@@ -249,6 +250,7 @@ int main(int argc, char **argv) {
       
       precision = atoi(argv[c + 1]);
       if(precision > MAX_PRECISION) precision = MAX_PRECISION;
+
       c++;
     }
     else if(streq(argv[c], "-s")){
@@ -265,7 +267,7 @@ int main(int argc, char **argv) {
   long double result = calculate(cmd, precision);
 
   if(scientific_notation){ printf("%.*Le\n", precision, result); }
-  else{ printf("%.*Lf\n", precision, result); }
+  else { printf("%.*Lf\n", precision, result); }
 
   return 0;
 }

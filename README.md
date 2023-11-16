@@ -1,4 +1,4 @@
-# tval
+![tval](icon.png)
 
 **tval** is an easy to use shell application for quick and easy calculation.
 
