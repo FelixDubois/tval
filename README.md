@@ -29,6 +29,12 @@ To use `tval` it's easy !
 tval [OPTIONS] "EXPRESSION"
 ```
 
+### Options
+There is several options you can have access :
+- `-h`, `--help` : Print the help message
+- `-p PRECISION` : Set the precision of the result (default : 12)
+- `-s` : Print the result in the scientific format
+
 ## Example
 ```shell
 tval "2 +5/2"
@@ -36,13 +42,13 @@ tval "2 +5/2"
 ```
 
 ```shell
-tval "sin(pi)"
--0.000000000000
+tval -p 0 "sin(pi)"
+-0
 ```
 
 ```shell
-tval "exp(2)"
-7.389056098931
+tval -s -p 2 "2*pi + 230"
+2.36e+02
 ```
 
 ## Available Constants and Functions
