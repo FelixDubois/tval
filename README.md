@@ -65,7 +65,11 @@ tval -s -p 2 "2*pi + 230"
 ## Todos
 ### Bugs
 - Expression like `tan(pi/2)` should return `inf` and not the maximum value for a `long double`.
+- There is an error when evaluating `-5` due to the way I handle operators
 
 ### What I want to work on ?
 - Include more functions and constants.
 - Add complex numbers
+
+## Foot note
+I love working on this project. If you have any suggestion about new fonctionnalities dont hesitate !
