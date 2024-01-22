@@ -184,11 +184,9 @@ Stack *SYA(Tokens tokens)
 
 void push_result(Stack *s, long double result, int precision)
 {
-  char buff[MAX_PRECISION];
-  snprintf(buff, sizeof(buff), "%.*Lf", precision + 1, result);
-
   char *v = malloc(sizeof(char) * MAX_PRECISION);
-  strcpy(v, buff);
+  snprintf(v, sizeof(&v), "%.*Lf", precision + 1, result);
+
   push(s, v);
 }
 
