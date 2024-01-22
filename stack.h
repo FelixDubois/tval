@@ -26,14 +26,14 @@ char *head(Stack *s) {   if (s->top < 0) { return NULL; } return s->data[s->top]
 char *pop(Stack *s) {
   assert(s->top >= 0 && "UNDERFLOW !\n");
 
-  s->top -= 1;
+  s->top--;
   return s->data[s->top + 1];
 }
 
 void push(Stack *s, char *v) {
-  // assert(s->top < s->size - 1 && "OVERFLOW !\n");
+  assert(s->top < s->size - 1 && "OVERFLOW !\n");
 
-  s->top += 1;
+  s->top++;
   s->data[s->top] = v;
 }
 
@@ -50,7 +50,7 @@ void print(Stack *s) {
   for (int i = s->top; i >= 0; i--) {
     printf("%s ", s->data[i]);
   }
-  printf("\n");
+  printf("]\n");
 }
 
 #endif // STACK_H

@@ -10,7 +10,7 @@
 #define E   "2.7182818284590452353602874713526624977572"
 #define GR  "1.61803398874989484820458683436563811"
 
-#define MAX_PRECISION 9999
+#define MAX_PRECISION 100
 
 void exit_err(char *msg, void *p, ...) {
   fprintf(stderr, msg, p);
@@ -67,19 +67,19 @@ bool is_operator(char *c) {
 
 int operator_order(char *op) {
   if (streq(op, "-") || streq(op, "+")) {
-    return 2;
+    return 1;
   }
 
   if (streq(op, "/") || streq(op, "*")) {
-    return 3;
+    return 2;
   }
 
   if (streq(op, "^")) {
-    return 4;
+    return 3;
   }
 
   if (streq(op, "(") || streq(op, ")")) {
-    return 5;
+    return 4;
   }
 
   exit_err("ERROR : Unknown operator : \"%s\"\n", op);
@@ -131,10 +131,22 @@ Stack *SYA(Tokens tokens) {
   return out;
 }
 
+void push_result(Stack *s, long double result, int precision) {
+  char buff[MAX_PRECISION];
+  snprintf(buff, sizeof(buff), "%.*Lf", precision + 1, result);
+
+  char* v = malloc(sizeof(char) * MAX_PRECISION);
+  strcpy(v, buff);
+  push(s, v);
+}
+
 long double evaluate_sya(Stack * out_r, int precision) {
     long double result = 0.0;
     Stack *s = create_stack(out_r->size);
     while (out_r->top >= 0) {
+      //print(out_r);
+      //print(s);
+      //printf("\n");
       if (is_number(head(out_r))) {
         push(s, pop(out_r));
       } else if (is_operator(head(out_r))) {
@@ -144,6 +156,7 @@ long double evaluate_sya(Stack * out_r, int precision) {
         }
 
         char *op = pop(out_r);
+        
         long double a = strtold(pop(s), NULL);
         long double b = strtold(pop(s), NULL);
 
@@ -158,6 +171,10 @@ long double evaluate_sya(Stack * out_r, int precision) {
           result = b * a;
           break;
         case '/':
+          if (a == 0) {
+            fprintf(stderr, "ERROR : Division by zero\n");
+            exit(1);
+          }
           result = b / a;
           break;
         case '^':
@@ -167,9 +184,13 @@ long double evaluate_sya(Stack * out_r, int precision) {
           fprintf(stderr, "ERROR : Unknown operator : \"%s\"\n", op);
           exit(1);
         }
-        char buff[MAX_PRECISION];
+        push_result(s, result, precision);
+        /*char buff[MAX_PRECISION];
         snprintf(buff, sizeof(buff), "%.*Lf", precision + 1, result);
-        push(s, buff);
+        char *v = malloc(sizeof(char) * MAX_PRECISION);
+        strcpy(v, buff);
+        push(s, v);*/
+
       }else if(is_function(head(out_r))) {
         char *f = pop(out_r);
         if(s->top < 0) {
@@ -179,12 +200,12 @@ long double evaluate_sya(Stack * out_r, int precision) {
 
         long double a = strtold(pop(s), NULL);
 
-        if(streq(f, "log")) {
-          result = logl(a);
-        }else if(streq(f, "log10")) {
-          result = log10l(a);
-        }else if(streq(f, "log2")) {
-          result = log2l(a);
+        if(streq(f, "log") || streq(f, "log10") || streq(f, "log2")) {
+          if (a <= 0) {
+            fprintf(stderr, "ERROR : Logarithm of non-positive number\n");
+            exit(1);
+          }
+          result = (streq(f, "log") ? logl(a) : (streq(f, "log10") ? log10l(a) : log2l(a)));
         }else if(streq(f, "exp")) {
           result = expl(a);
         }else if(streq(f, "tanh")) {
@@ -198,21 +219,34 @@ long double evaluate_sya(Stack * out_r, int precision) {
         }else if(streq(f, "cos")) {
           result = cosl(a);
         }else if(streq(f, "sqrt")) {
+          if (a < 0) {
+            fprintf(stderr, "ERROR : Square root of negative number\n");
+            exit(1);
+          }
           result = sqrtl(a);
         }else {
           fprintf(stderr, "ERROR : Unknown function : \"%s\"\n", f);
           exit(1);
         }
         
-        char buff[MAX_PRECISION];
+        /*char buff[MAX_PRECISION];
         snprintf(buff, sizeof(buff), "%.*Lf", precision + 1, result);
-        push(s, buff);
+        push(s, buff);*/
+
+        push_result(s, result, precision);
       }
 
     }
 
+    if (s->top != 0) {
+      fprintf(stderr, "ERROR : Malformed expression\n");
+      exit(1);
+    }
+
     return result;
 }
+
+
 
 long double calculate(char *cmd, int precision) {
     Tokens tokens = tokenize(cmd);
@@ -232,6 +266,18 @@ void print_help(){
 }
 
 int main(int argc, char **argv) {
+  /*Stack *s = create_stack(10);
+  push(s, "1");
+
+  long double e = 18123;
+  char buff[MAX_PRECISION];
+  snprintf(buff, sizeof(buff), "%.*Lf", 3, e);
+  push(s, buff);
+
+  print(s);
+
+  return 0;*/
+
   if (argc < 2) {
     printf("Error : Wrong usage of tval\nType --help to have more info\n");
     exit(1);

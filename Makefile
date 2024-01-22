@@ -1,5 +1,5 @@
 CC = cc
-CFLAGS = -Wall -Wextra
+CFLAGS = -Wall -Wextra -DDEBUG -g
 
 tval : tval.c
 	$(CC) -o tval tval.c -lm -I.
@@ -9,4 +9,4 @@ install: tval
 	rm -f tval
 
 clean:
-	rm -f tval 
+	rm -f tval
