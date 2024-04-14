@@ -202,42 +202,49 @@ long double evaluate_sya(Stack *out_r, int precision)
     }
     else if (is_operator(head(out_r)))
     {
-      if (s->top < 1)
+      if (s->top < 1 && !streq(out_r->data[out_r->top], "-"))
       {
         fprintf(stderr, "ERROR : Can\'t perform expression\n");
         exit(1);
       }
 
       char *op = pop(out_r);
-
-      long double a = strtold(pop(s), NULL);
-      long double b = strtold(pop(s), NULL);
-
-      switch (*op)
+      if (streq(op, "-") && s->top == 0) // unary minus
       {
-      case '+':
-        result = b + a;
-        break;
-      case '-':
-        result = b - a;
-        break;
-      case '*':
-        result = b * a;
-        break;
-      case '/':
-        if (a == 0)
+        long double a = strtold(pop(s), NULL);
+        result = -a;
+      }
+      else
+      {
+        long double a = strtold(pop(s), NULL);
+        long double b = strtold(pop(s), NULL);
+
+        switch (*op)
         {
-          fprintf(stderr, "ERROR : Division by zero\n");
+        case '+':
+          result = b + a;
+          break;
+        case '-':
+          result = b - a;
+          break;
+        case '*':
+          result = b * a;
+          break;
+        case '/':
+          if (a == 0)
+          {
+            fprintf(stderr, "ERROR : Division by zero\n");
+            exit(1);
+          }
+          result = b / a;
+          break;
+        case '^':
+          result = powl(b, a);
+          break;
+        default:
+          fprintf(stderr, "ERROR : Unknown operator : \"%s\"\n", op);
           exit(1);
         }
-        result = b / a;
-        break;
-      case '^':
-        result = powl(b, a);
-        break;
-      default:
-        fprintf(stderr, "ERROR : Unknown operator : \"%s\"\n", op);
-        exit(1);
       }
       push_result(s, result, precision);
     }
