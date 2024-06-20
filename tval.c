@@ -202,7 +202,7 @@ long double evaluate_sya(Stack *out_r, int precision)
     }
     else if (is_operator(head(out_r)))
     {
-      if (s->top < 1 && !streq(out_r->data[out_r->top], "-"))
+      if (s->top < 1 && !(streq(out_r->data[out_r->top], "-") || streq(out_r->data[out_r->top], "+")))
       {
         fprintf(stderr, "ERROR : Can\'t perform expression\n");
         exit(1);
@@ -213,6 +213,11 @@ long double evaluate_sya(Stack *out_r, int precision)
       {
         long double a = strtold(pop(s), NULL);
         result = -a;
+      }
+      else if (streq(op, "+") && s->top == 0) // unary plus
+      {
+        long double a = strtold(pop(s), NULL);
+        result = a;
       }
       else
       {
